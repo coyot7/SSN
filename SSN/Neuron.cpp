@@ -3,7 +3,9 @@
 #include "math.h"
 
 double Neuron::danaWejsciowa[][4];
-double Neuron::wynik;
+double Neuron::m_wynik;
+double Neuron::danaOczekiwana = 0;
+Neuron::Stan Neuron::dzialanie = Neuron::BRAK;
 
 Neuron::Neuron()
 {
@@ -14,7 +16,7 @@ Neuron::~Neuron()
 {
 }
 
-double Neuron::LosujLiczbe()
+double Neuron::losujLiczbe()
 {
 	double wylosowanaLiczba;
 	do
@@ -26,7 +28,7 @@ double Neuron::LosujLiczbe()
 	return wylosowanaLiczba;
 }
 
-void Neuron::Dzialaj(bool losowanie, int warstwa)
+void Neuron::dzialaj(bool losowanie, int warstwa)
 {
 	double wyjscie = 0;
 	//wejscie losujace
@@ -34,21 +36,21 @@ void Neuron::Dzialaj(bool losowanie, int warstwa)
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			wagi[i] = LosujLiczbe();
+			wagi[i] = losujLiczbe();
 		}
 	}
 
 	//wejscie bez losowania
 	//#######################
 
-	sumator = Sumator(warstwa);
-	aktywator = Aktywator();
-	this->wyjscie = aktywator;
+	m_sumator = sumator(warstwa);
+	m_aktywator = aktywator();
+	this->m_wyjscie = m_aktywator;
 	if (warstwa == 2)
-		this->wynik = this->wyjscie;
+		this->m_wynik = this->m_wyjscie;
 }
 
-double Neuron::Sumator(int warstwa)
+double Neuron::sumator(int warstwa)
 {
 	double wynik = 0;
 
@@ -79,20 +81,26 @@ double Neuron::Sumator(int warstwa)
 	return wynik;
 }
 
-double Neuron::Aktywator()
+double Neuron::aktywator()
 {
-	double wynik = 0;
+	double wynikTanges = 0;
 	double licznik = 0;
 	double mianownik = 0;
+	double wynikTangesPochodna = 0;
 
-	licznik = exp(sumator) - exp(-sumator);
-	mianownik = exp(sumator) + exp(-sumator);
-	wynik = licznik / mianownik;
 
-	return wynik;
+	//liczymy tangens hiperboliczny, tan(h)
+	licznik = exp(m_sumator) - exp(-m_sumator);
+	mianownik = exp(m_sumator) + exp(-m_sumator);
+	wynikTanges = licznik / mianownik;
+
+	//liczymy pochodn¹ tan(h)
+	wynikTangesPochodna = 1 - (wynikTanges * wynikTanges);
+
+	return wynikTanges;
 }
 
-void Neuron::SetDaneWejsciowe()
+void Neuron::setDaneWejsciowe()
 {
 	cout << endl;
 	cout << "Podaj x1: ";
@@ -101,16 +109,39 @@ void Neuron::SetDaneWejsciowe()
 	cin >> danaWejsciowa[0][1];
 	//bies = 1;
 	danaWejsciowa[0][2] = 1;
+
+	cout << "\nPodaj wynik: ";
+	cin >> danaOczekiwana;
+}
+
+void Neuron::menu()
+{
+	int klawisz = 0;
+
+	cout << "\nMoze nauka?\n\n";
+	cout << " 1 - Uczymy sie \n";
+	cout << " 2 - Dzialamy \n";
+
+	cin >> klawisz;
+	if (klawisz == 1)
+	{
+		Neuron::dzialanie = Neuron::Stan::UCZY_SIE;
+	}
+	else if (klawisz == 2)
+	{
+		Neuron::dzialanie = Neuron::Stan::DZIALA;
+	}
+	system("cls");
 }
 
 double Neuron::getWyjscie()
 {
-	return wyjscie;
+	return m_wyjscie;
 }
 
 double Neuron::getWynik()
 {
-	return wynik;
+	return m_wynik;
 }
 
 void Neuron::setDanaWejsciowa(int warstwa, int neuron, double dana)
@@ -178,10 +209,10 @@ void Neuron::DisplayMatrix(int warstwa, int neuron)
 
 	cout << "\n===============\n";
 	cout << "Sumator:\n";
-	cout << sumator << endl;
+	cout << m_sumator << endl;
 
 	cout << "\n===============\n";
 	cout << "Aktywator:\n";
-	cout << aktywator << endl;
+	cout << m_aktywator << endl;
 	
 }

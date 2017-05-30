@@ -34,18 +34,20 @@ void Controller::init()
 
 void Controller::run()
 {
-	Neuron::SetDaneWejsciowe();
+	Neuron::menu();
+
+	Neuron::setDaneWejsciowe();
 
 
-	warstwa0_neruron0.Dzialaj(true, 0);
+	warstwa0_neruron0.dzialaj(true, 0);
 	Neuron::setDanaWejsciowa(1, 0, warstwa0_neruron0.getWyjscie());
 	warstwa0_neruron0.DisplayMatrix(0, 0);
 
-	warstwa0_neruron1.Dzialaj(true, 0);
+	warstwa0_neruron1.dzialaj(true, 0);
 	Neuron::setDanaWejsciowa(1, 1, warstwa0_neruron1.getWyjscie());
 	warstwa0_neruron1.DisplayMatrix(0, 1);
 
-	warstwa0_neruron2.Dzialaj(true, 0);
+	warstwa0_neruron2.dzialaj(true, 0);
 	Neuron::setDanaWejsciowa(1, 2, warstwa0_neruron2.getWyjscie());
 	warstwa0_neruron2.DisplayMatrix(0, 2);
 	
@@ -53,18 +55,18 @@ void Controller::run()
 	Neuron::setDanaWejsciowa(1, 3, 1);
 
 
-	warstwa1_neruron0.Dzialaj(true, 1);
+	warstwa1_neruron0.dzialaj(true, 1);
 	Neuron::setDanaWejsciowa(2, 0, warstwa1_neruron0.getWyjscie());
 	warstwa1_neruron0.DisplayMatrix(1, 0);
 
-	warstwa1_neruron1.Dzialaj(true, 1);
+	warstwa1_neruron1.dzialaj(true, 1);
 	Neuron::setDanaWejsciowa(2, 1, warstwa1_neruron1.getWyjscie());
 	warstwa1_neruron1.DisplayMatrix(1, 1);
 
 	//bies
 	Neuron::setDanaWejsciowa(2, 2, 1);
 
-	wynik.Dzialaj(true, 2);
+	wynik.dzialaj(true, 2);
 	wynik.DisplayMatrix(2, 0);
 
 	cout << "\nWynik: " << Neuron::getWynik() << endl;
